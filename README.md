@@ -1,6 +1,6 @@
-# slackbot
+# archie
 
-FIXME
+A slack archiving service
 
 ## Prerequisites
 
@@ -12,7 +12,8 @@ You will need [Leiningen][] 2.0.0 or above installed.
 
 To start a web server for the application, run:
 
-    lein ring server
+    lein ring server # opens browser
+    lein ring server-headless # doesn't open browser
 
 ## License
 
