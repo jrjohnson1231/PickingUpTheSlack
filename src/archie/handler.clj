@@ -38,6 +38,7 @@
     (println "inserting document" message)
     (mc/update db "messages" {:event_id event_id} message {:upsert true})
     (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
+    (mc/update db "users" {:name user} {:name user} {:upsert true})
     )
   )
 
