@@ -15,7 +15,7 @@
   )
 
 (defn get_user_info [userID]
-  (get-in (client/get "https://slack.com/api/users.info" {:as :json, :query-params {:token auth_token, :user userID}}) [:body :user])
+  (get-in (client/get "https://slack.com/api/users.info" {:as :json, :query-params {:token auth_token, :user userID}}) [:body])
   )
 
 (defn handle_challenge [body]
