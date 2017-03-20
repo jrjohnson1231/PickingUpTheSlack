@@ -33,9 +33,10 @@
         user    (get_user_info (get-in body [:event :user]))
         message (get-in body [:event :text])
         event_id (get-in body [:event :event_id])
-        timestamp (get-in body [:event :event_ts])]
-    (println "inserting document")
-    (println (mc/insert db "messages" { :_id (ObjectId. event_id) :user user :channel channel :message message :timestamp timestamp }) )
+        timestamp (get-in body [:event :event_ts])
+        doc { :_id (ObjectId. event_id) :user user :channel channel :message message :timestamp timestamp }]
+    (println "inserting document" doc)
+    (println (mc/insert db "messages" doc))
     )
   )
 
