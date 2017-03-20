@@ -32,7 +32,7 @@
         channel (get_channel_info (get-in body [:event :channel]))
         user    (get_user_info (get-in body [:event :user]))
         message (get-in body [:event :text])
-        event_id (get-in body [:event :event_id])
+        event_id (get-in body [:event_id])
         timestamp (get-in body [:event :event_ts])
         doc { :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
     (println "inserting document" doc)
