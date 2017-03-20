@@ -3,13 +3,23 @@
             [compojure.handler :as handler]
             [ring.middleware.defaults :refer :all]
             [ring.middleware.json :as json]
+            [clj-http.client :as client]
             [compojure.route :as route]))
+
+(def auth_token
+  "xoxp-17641790740-18419529792-151170615858-ff4431cac73e0a09b781db8fcd6fc429"
+  )
+
+(defn get_channel_info [channelID]
+  (get-in (client/get "https://slack.com/api/channels.info" {:as :json, :query-params {:token auth_token, :channel channelID}}) [:body :channel :name])
+  )
 
 (defn handle_challenge [body]
   (get body :challenge)
   )
 
 (defn handle_event [body]
+  (println (get_channel_info (get-in body [:event :channel])))
   (println (get-in body [:event :text]))
   )
 

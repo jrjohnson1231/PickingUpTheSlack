@@ -4,8 +4,10 @@
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.5.1"]
+                 [clj-http "2.3.0"]
                  [ring/ring-json "0.3.1"]
                  [ring.middleware.logger "0.5.0"]
+                 [ring/ring-servlet "1.2.0-RC1"]
                  [ring/ring-defaults "0.2.1"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler archie.handler/app}
