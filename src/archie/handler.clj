@@ -36,7 +36,7 @@
         timestamp (get-in body [:event :event_ts])
         doc { :_id (ObjectId.) :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
     (println "inserting document" doc)
-    (mc/insert db "messages" doc)
+    (mc/update db "messages" {:event_id event_id} doc {:upsert true})
     )
   )
 
@@ -50,6 +50,8 @@
             "event_callback" (handle_event body)
             )
           ))
+  (GET "/channels" 
+       (
   (route/not-found "Route Not Found"))
 
 (def app
