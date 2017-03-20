@@ -34,9 +34,10 @@
         message (get-in body [:event :text])
         event_id (get-in body [:event_id])
         timestamp (get-in body [:event :event_ts])
-        doc { :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
-    (println "inserting document" doc)
-    (mc/update db "messages" {:event_id event_id} doc {:upsert true})
+        message { :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
+    (println "inserting document" message)
+    (mc/update db "messages" {:event_id event_id} message {:upsert true})
+    (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
     )
   )
 
