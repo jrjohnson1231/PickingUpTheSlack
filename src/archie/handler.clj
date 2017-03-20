@@ -6,7 +6,8 @@
             [clj-http.client :as client]
             [monger.core :as mg]
             [monger.collection :as mc]
-            [compojure.route :as route])
+            [compojure.route :as route]
+            monger.json)
   (:import [org.bson.types ObjectId]
            [com.mongodb MongoOptions ServerAddress]))
 
@@ -52,6 +53,12 @@
             "event_callback" (handle_event body)
             )
           ))
+  (GET "/channels" []
+       (let [uri     (System/getenv "MONGODB_URI")
+             {:keys [conn db]} (mg/connect-via-uri uri)]
+         (mc/find-maps db "channels")
+         )
+       )
   (route/not-found "Route Not Found"))
 
 (def app
