@@ -7,7 +7,7 @@
             [compojure.route :as route]))
 
 (def auth_token
-  "xoxp-17641790740-18419529792-156747952947-c97e28131851aac8477586d6de444567"
+  (System/getenv "AUTH_TOKEN")
   )
 
 (defn get_channel_info [channelID]
