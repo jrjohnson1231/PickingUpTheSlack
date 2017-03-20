@@ -34,7 +34,7 @@
         message (get-in body [:event :text])
         event_id (get-in body [:event :event_id])
         timestamp (get-in body [:event :event_ts])
-        doc { :_id (ObjectId. event_id) :user user :channel channel :message message :timestamp timestamp }]
+        doc { :_id (ObjectId.) :user user :channel channel :message message :timestamp timestamp }]
     (println "inserting document" doc)
     (mc/insert db "messages" doc)
     )
