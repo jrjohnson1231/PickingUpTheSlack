@@ -14,12 +14,17 @@
   (get-in (client/get "https://slack.com/api/channels.info" {:as :json, :query-params {:token auth_token, :channel channelID}}) [:body :channel :name])
   )
 
+(defn get_channel_info [channelID]
+  (get-in (client/get "https://slack.com/api/users.info" {:as :json, :query-params {:token auth_token, :channel channelID}}) [:body :channel :name])
+  )
+
 (defn handle_challenge [body]
   (get body :challenge)
   )
 
 (defn handle_event [body]
   (println (get_channel_info (get-in body [:event :channel])))
+  (println (get_user_info (get-in body [:event :user])))
   (println (get-in body [:event :text]))
   )
 
