@@ -31,9 +31,11 @@
                 {:keys [conn db]} (mg/connect-via-uri uri)
         channel (get_channel_info (get-in body [:event :channel]))
         user    (get_user_info (get-in body [:event :user]))
-        message (get-in body [:event :text])]
+        message (get-in body [:event :text])
+        event_id (get-in body [:event event_id])
+        timestamp (get-in body [:event :event_ts])]
         
-       (mc/insert db "messages" { :_id (ObjectId.) :user user :channel channel :message message }) 
+       (mc/insert db "messages" { :_id (ObjectId. event_id) :user user :channel channel :message message :timestamp timestamp }) 
     )
   )
 
