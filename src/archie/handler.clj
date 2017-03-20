@@ -34,8 +34,7 @@
         message (get-in body [:event :text])
         event_id (get-in body [:event :event_id])
         timestamp (get-in body [:event :event_ts])]
-        
-       (mc/insert db "messages" { :_id (ObjectId. event_id) :user user :channel channel :message message :timestamp timestamp }) 
+    (println (mc/insert db "messages" { :_id (ObjectId. event_id) :user user :channel channel :message message :timestamp timestamp }) )
     )
   )
 
