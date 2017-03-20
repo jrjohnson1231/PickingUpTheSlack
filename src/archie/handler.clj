@@ -7,15 +7,15 @@
             [compojure.route :as route]))
 
 (def auth_token
-  "xoxp-17641790740-18419529792-151170615858-ff4431cac73e0a09b781db8fcd6fc429"
+  "xoxp-17641790740-18419529792-156747952947-c97e28131851aac8477586d6de444567"
   )
 
 (defn get_channel_info [channelID]
   (get-in (client/get "https://slack.com/api/channels.info" {:as :json, :query-params {:token auth_token, :channel channelID}}) [:body :channel :name])
   )
 
-(defn get_channel_info [channelID]
-  (get-in (client/get "https://slack.com/api/users.info" {:as :json, :query-params {:token auth_token, :channel channelID}}) [:body :channel :name])
+(defn user [userID]
+  (get-in (client/get "https://slack.com/api/users.info" {:as :json, :query-params {:token auth_token, :user userID}}) [:body :channel :name])
   )
 
 (defn handle_challenge [body]
