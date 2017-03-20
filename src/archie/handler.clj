@@ -4,7 +4,10 @@
             [ring.middleware.defaults :refer :all]
             [ring.middleware.json :as json]
             [clj-http.client :as client]
-            [compojure.route :as route]))
+            [monger.core :as mg]
+            [compojure.route :as route])
+  (:import [org.bson.types ObjectId]
+           [com.mongodb MongoOptions ServerAddress]))
 
 (def auth_token
   (System/getenv "AUTH_TOKEN")
@@ -23,9 +26,14 @@
   )
 
 (defn handle_event [body]
-  (println (get_channel_info (get-in body [:event :channel])))
-  (println (get_user_info (get-in body [:event :user])))
-  (println (get-in body [:event :text]))
+  (let [uri     (System/getenv "MONGODB_URI")
+                {:keys [conn db]} (mg/connect-via-uri uri)
+        channel (get_channel_info (get-in body [:event :channel]))
+        user    (get_user_info (get-in body [:event :user]))
+        message (get-in body [:event :text])]
+        
+       (mc/insert db "messages" { :_id (ObjectId.) :user user :channel channel :message message }) 
+    )
   )
 
 (defroutes app-routes
