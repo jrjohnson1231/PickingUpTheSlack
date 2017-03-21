@@ -1,3 +1,5 @@
+<!-- Used w3schools tutorials -->
+
 <!DOCTYPE html>
 <html>
 <title>HackersProj2</title>
@@ -123,9 +125,9 @@ input[type=text]:focus {
 <body>
   <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Channels:</b></p>
   <div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'LUG')" id="defaultOpen">LUG</button>
-    <button class="tablinks" onclick="openCity(event, 'Systems')">Systems</button>
-    <button class="tablinks" onclick="openCity(event, 'OS')">OS</button>
+    <button class="tablinks" onclick="openTab(event, 'LUG')" id="defaultOpen">LUG</button>
+    <button class="tablinks" onclick="openTab(event, 'Systems')">Systems</button>
+    <button class="tablinks" onclick="openTab(event, 'OS')">OS</button>
   </div>
 
   <div id="LUG" class="tabcontent">
@@ -144,7 +146,7 @@ input[type=text]:focus {
   </div>
 
   <script>
-    function openCity(evt, cityName) {
+    function openTab(evt, tabName) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("tabcontent");
       for (i = 0; i < tabcontent.length; i++) {
