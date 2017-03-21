@@ -6,8 +6,7 @@
             [clj-http.client :as client]
             [monger.core :as mg]
             [monger.collection :as mc]
-            [compojure.route :as route]
-            monger.json)
+            [compojure.route :as route])
   (:import [org.bson.types ObjectId]
            [com.mongodb MongoOptions ServerAddress]))
 
@@ -33,10 +32,10 @@
         channel (get_channel_info (get-in body [:event :channel]))
         user    (get_user_info (get-in body [:event :user]))
         message (get-in body [:event :text])
-        event_id (get-in body [:event_id])
+        event_id (get-in body [:event :event_id])
         timestamp (get-in body [:event :event_ts])
-        message { :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
-    (println "inserting document" message)
+        doc { :_id (ObjectId.) :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
+    (println "inserting document" doc)
     (mc/update db "messages" {:event_id event_id} message {:upsert true})
     (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
@@ -53,10 +52,42 @@
             "event_callback" (handle_event body)
             )
           ))
+  (GET "/channel/:channelName" )
+      (let [uri     (System/getenv "MONGODB_URI")
+              {:keys [conn db]} (mg/connect-via-uri uri)
+              {{channelName :channelName} :params}]
+          (mc/find-maps db "channels" {:name channelName})
+          )
+  (GET "/user/:userName"
+      (let [uri     (System/getenv "MONGODB_URI")
+              {:keys [conn db]} (mg/connect-via-uri uri)
+              {{userName :userName} :params}]
+          (mc/find-maps db "users" {:name userName})
+          )
+      )
   (GET "/channels" []
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
          (mc/find-maps db "channels")
+         )
+       )
+  (GET "/users" []
+      (let [uri     (System/getenv "MONGODB_URI")
+            {:keys [conn db]} (mg/connect-via-uri uri)]
+        (mc/find-maps db "users")
+        )
+      )
+  (GET "/messages/:eventID"
+      (let [uri     (System/getenv "MONGODB_URI")
+              {:keys [conn db]} (mg/connect-via-uri uri)
+              {{eventID :eventID} :params}]
+          (mc/find-maps db "messages" {:eventID eventID})
+          )
+      )
+  (GET "/messages" []
+       (let [uri     (System/getenv "MONGODB_URI")
+             {:keys [conn db]} (mg/connect-via-uri uri)]
+         (mc/find-maps db "messages")
          )
        )
   (route/not-found "Route Not Found"))
