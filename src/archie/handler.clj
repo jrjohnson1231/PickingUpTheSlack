@@ -107,6 +107,7 @@
          (mc/find-maps db "messages" {:channel channelID :tags tag})
          )
        )
+  (route/resources "/")
   (route/not-found "Route Not Found"))
 
 (def app
