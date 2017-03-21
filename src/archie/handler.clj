@@ -6,7 +6,8 @@
             [clj-http.client :as client]
             [monger.core :as mg]
             [monger.collection :as mc]
-            [compojure.route :as route])
+            [compojure.route :as route]
+            monger.json)
   (:import [org.bson.types ObjectId]
            [com.mongodb MongoOptions ServerAddress]))
 
@@ -61,13 +62,13 @@
   (GET "/channel/:channelName" [channelName]
       (let [uri     (System/getenv "MONGODB_URI")
               {:keys [conn db]} (mg/connect-via-uri uri)]
-          (mc/find-maps db "channels" {:name channelName})
+          (mc/find-one-as-map db "channels" {:name channelName})
           )
        )
   (GET "/user/:userName" [userName]
       (let [uri     (System/getenv "MONGODB_URI")
               {:keys [conn db]} (mg/connect-via-uri uri)]
-          (mc/find-maps db "users" {:name userName})
+          (mc/find-one-as-map db "users" {:name userName})
           )
       )
   (GET "/channels" []
@@ -85,7 +86,7 @@
   (GET "/messages/:eventID" [eventID]
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
-         (mc/find-maps db "messages" {:eventID eventID})
+         (mc/find-one-as-map db "messages" {:eventID eventID})
          )
        )
   (GET "/messages" []
