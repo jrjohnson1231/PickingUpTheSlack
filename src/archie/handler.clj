@@ -95,7 +95,7 @@
          (mc/find-maps db "messages")
          )
        )
- (GET "/messages/channelID" []
+ (GET "/messages/:channelID" [channelID]
       (let [uri     (System/getenv "MONGODB_URI")
             {:keys [conn db]} (mg/connect-via-uri uri)]
         (mc/find-maps db "messages" {:channel channelID})
