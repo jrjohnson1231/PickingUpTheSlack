@@ -10,6 +10,8 @@
   (:import [org.bson.types ObjectId]
            [com.mongodb MongoOptions ServerAddress]))
 
+(use '[clojure.string :only (replace-first)])
+
 (def auth_token
   (System/getenv "AUTH_TOKEN")
   )
@@ -26,16 +28,20 @@
   (get body :challenge)
   )
 
+(defn get_tags [message]
+  (map #(replace-first % #"\s+\$" "") (re-seq #"\s+\$\w+" message))
+  )
+
 (defn handle_event [body]
   (let [uri     (System/getenv "MONGODB_URI")
-                {:keys [conn db]} (mg/connect-via-uri uri)
+        {:keys [conn db]} (mg/connect-via-uri uri)
         channel (get_channel_info (get-in body [:event :channel]))
         user    (get_user_info (get-in body [:event :user]))
         message (get-in body [:event :text])
         event_id (get-in body [:event :event_id])
         timestamp (get-in body [:event :event_ts])
-        doc { :_id (ObjectId.) :user user :channel channel :message message :timestamp timestamp :event_id event_id }]
-    (println "inserting document" doc)
+        message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags (get_tags message) }]
+    (println "inserting document" message)
     (mc/update db "messages" {:event_id event_id} message {:upsert true})
     (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
@@ -88,6 +94,10 @@
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
          (mc/find-maps db "messages")
+  (GET "/messagesWithTag/:channel/:tag" [channel, tag]
+       (let [uri     (System/getenv "MONGODB_URI")
+             {:keys [conn db]} (mg/connect-via-uri uri)]
+         (mc/find-maps db "messages" {:channel channel :tags tag})
          )
        )
   (route/not-found "Route Not Found"))
