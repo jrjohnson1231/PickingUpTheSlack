@@ -65,6 +65,12 @@
          (mc/find-maps db "channels")
          )
        )
+  (GET "/messagesWithTag/:channel/:tag" [channel, tag] 
+       (let [uri     (System/getenv "MONGODB_URI")
+             {:keys [conn db]} (mg/connect-via-uri uri)]
+         (mc/find-maps db "messages" {:channel channel :tags tag})
+         )
+       )
   (route/not-found "Route Not Found"))
 
 (def app
