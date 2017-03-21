@@ -58,16 +58,15 @@
             "event_callback" (handle_event body)
             )
           ))
-  (GET "/channel/:channelName" )
+  (GET "/channel/:channelName" [channelName]
       (let [uri     (System/getenv "MONGODB_URI")
-              {:keys [conn db]} (mg/connect-via-uri uri)
-              {{channelName :channelName} :params}]
+              {:keys [conn db]} (mg/connect-via-uri uri)]
           (mc/find-maps db "channels" {:name channelName})
           )
-  (GET "/user/:userName"
+       )
+  (GET "/user/:userName" [userName]
       (let [uri     (System/getenv "MONGODB_URI")
-              {:keys [conn db]} (mg/connect-via-uri uri)
-              {{userName :userName} :params}]
+              {:keys [conn db]} (mg/connect-via-uri uri)]
           (mc/find-maps db "users" {:name userName})
           )
       )
@@ -82,18 +81,19 @@
             {:keys [conn db]} (mg/connect-via-uri uri)]
         (mc/find-maps db "users")
         )
-      )
-  (GET "/messages/:eventID"
-      (let [uri     (System/getenv "MONGODB_URI")
-              {:keys [conn db]} (mg/connect-via-uri uri)
-              {{eventID :eventID} :params}]
-          (mc/find-maps db "messages" {:eventID eventID})
-          )
-      )
+       )
+  (GET "/messages/:eventID" [eventID]
+       (let [uri     (System/getenv "MONGODB_URI")
+             {:keys [conn db]} (mg/connect-via-uri uri)]
+         (mc/find-maps db "messages" {:eventID eventID})
+         )
+       )
   (GET "/messages" []
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
          (mc/find-maps db "messages")
+         )
+       )
   (GET "/messagesWithTag/:channel/:tag" [channel, tag]
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
