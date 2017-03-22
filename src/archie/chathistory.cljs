@@ -1,5 +1,8 @@
 (ns chathistory.core
-  (:require [clojure.string :as str]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [clojure.string :as str])
+  (:require [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]])
 (defn openTab
   [evt, tabName]
   (.log js/console (aget evt "currentTarget"))
@@ -14,3 +17,9 @@
 
   ;(js/document.dispatchEvent )
   )
+
+(go (let [response (<! (http/get "/channels"
+                                 {:with-credentials? false
+                                  :query-params {"since" 135}}))]
+      (prn (:status response))
+      (prn (map :login (:body response)))))
