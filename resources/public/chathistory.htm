@@ -147,11 +147,13 @@
     app.controller('myController', function($scope, $http) {
       console.log('in controller');
       $scope.tabs = [];
+      $scope.currentChannel = "";
       $http.get('/channels').then(function(res) {
         $scope.tabs = res.data
       })
 
       $scope.getMessages = function(channel) {
+        $scope.currentChannel = channel;
         console.log('getting messages')
         $http.get('/messages/' + channel).then(function(res) {
           console.log(res.data)
@@ -159,7 +161,12 @@
       }
 
       $scope.searchEntered = function(evt) {
-        console.log(evt);
+        var val = evt.target.value;
+        $http.get('/messages/' + $scope.currentChannel + '/' + val).then(function(res)
+        {
+          console.log(res.data);
+        }
+      )
       }
     });
   </script>
