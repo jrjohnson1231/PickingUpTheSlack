@@ -1,8 +1,13 @@
 (ns chathistory.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [clojure.string :as str])
-  (:require [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]])
+  (:require [clojure.string :as str]
+            [cljs-http.client :as http]
+            [goog.dom :as dom]
+            [cognitect.transit :as t]
+            [cljs.core.async :refer [<!]]))
+
+(def r (t/reader :json))
+
 (defn openTab
   [evt, tabName]
   (.log js/console (aget evt "currentTarget"))
@@ -18,8 +23,15 @@
   ;(js/document.dispatchEvent )
   )
 
+(defn create-tab [channelName]
+  (.log js/console channelName)
+  )
+
 (go (let [response (<! (http/get "/channels"
                                  {:with-credentials? false
                                   :query-params {"since" 135}}))]
-      (prn (:status response))
-      (prn (map :login (:body response)))))
+      (.log js/console "outside")
+      (for [channel (t/read r (:body response))]
+        (.log js/console "inside")
+        ;(dom/appendChild (js/document.getElementsByClassName "tabs") (create-tab (get channel :name)))
+        )))
