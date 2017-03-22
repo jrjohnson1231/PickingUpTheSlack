@@ -46,6 +46,7 @@
     (mc/update db "messages" {:user user :timestamp timestamp} message {:upsert true})
     (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
+    (println "done inserting")
     )
   )
 
