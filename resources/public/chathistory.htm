@@ -73,7 +73,7 @@
     <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Search for a tag:</b></p>
 
     <form>
-      <input type="text" name="search" placeholder="Search..">
+      <input ng-keyup="$event.keyCode == 13 && searchEntered($event)" type="text" name="search" placeholder="Search..">
     </form>
   </body>
 
@@ -156,6 +156,10 @@
         $http.get('/messages/' + channel).then(function(res) {
           console.log(res.data)
         })
+      }
+
+      $scope.searchEntered = function(evt) {
+        console.log(evt);
       }
     });
   </script>
