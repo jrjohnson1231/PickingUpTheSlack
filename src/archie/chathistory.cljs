@@ -22,16 +22,3 @@
 
   ;(js/document.dispatchEvent )
   )
-
-(defn create-tab [channelName]
-  (.log js/console channelName)
-  )
-
-(go (let [response (<! (http/get "/channels"
-                                 {:with-credentials? false
-                                  :query-params {"since" 135}}))]
-      (.log js/console "outside")
-      (for [channel (t/read r (:body response))]
-        (.log js/console "inside")
-        ;(dom/appendChild (js/document.getElementsByClassName "tabs") (create-tab (get channel :name)))
-        )))

@@ -6,6 +6,7 @@
 <head>
 
   <script type="text/javascript" src="js/main.js" async></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
   <style>
     input[type=text] {
@@ -120,16 +121,14 @@
   }
 </style>
 
-<body>
+<body ng-app="myApp" ng-controller="myController">
   <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Channels:</b></p>
   <div class="tab">
-    <button class="tablinks" onclick="chathistory.core.openTab(event)" id="defaultOpen">LUG</button>
-    <button class="tablinks" onclick="chathistory.core.openTab(event)">Systems</button>
-    <button class="tablinks" onclick="chathistory.core.openTab(event)">OS</button>
+    <button ng-repeat="tab in tabs" class="tablinks" ng-click="getMessages(tab.name)" onclick="chathistory.core.openTab(event)">{{ tab.name }}</button>
   </div>
 
-  <div id="LUG" class="tabcontent">
-    <h3>LUG</h3>
+  <div class="tabcontent">
+    <h3>{{name}}</h3>
     <p>Display of the LUG chat</p>
   </div>
 
@@ -143,13 +142,21 @@
     <p>Display of the OS chat</p>
   </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
   <script type="text/javascript" charset="utf-8">
     var app = angular.module('myApp', []);
-    app.controller('myController', function MyController($scope, $http) {
-      $http.get('/channels', function(res) {
-        console.log(res)
+    app.controller('myController', function($scope, $http) {
+      console.log('in controller');
+      $scope.tabs = [];
+      $http.get('/channels').then(function(res) {
+        $scope.tabs = res.data
       })
+
+      $scope.getMessages = function(channel) {
+        console.log('getting messages')
+        $http.get('/messages/' + channel).then(function(res) {
+          console.log(res.data)
+        })
+      }
     });
   </script>
 </div>
