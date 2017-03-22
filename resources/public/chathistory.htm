@@ -4,7 +4,7 @@
 <html>
 <title>HackersProj2</title>
 <head>
-  <script type="text/javascript" src="out/main.js" async></script>
+  <script type="text/javascript" src="js/main.js" async></script>
   <style>
     input[type=text] {
     width: 130px;
@@ -121,9 +121,9 @@
 <body>
   <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Channels:</b></p>
   <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'LUG')" id="defaultOpen">LUG</button>
-    <button class="tablinks" onclick="openTab(event, 'Systems')">Systems</button>
-    <button class="tablinks" onclick="openTab(event, 'OS')">OS</button>
+    <button class="tablinks" onclick="chathistory.core.openTab(event, 'LUG')" id="defaultOpen">LUG</button>
+    <button class="tablinks" onclick="chathistory.core.openTab(event, 'Systems')">Systems</button>
+    <button class="tablinks" onclick="chathistory.core.openTab(event, 'OS')">OS</button>
   </div>
 
   <div id="LUG" class="tabcontent">
