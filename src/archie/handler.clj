@@ -43,7 +43,7 @@
         timestamp (get-in body [:event :event_ts])
         message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags (get_tags message) }]
     (println "inserting document" message)
-    (mc/update db "messages" {:event_id event_id} message {:upsert true})
+    (mc/update db "messages" {:user user :timestamp timestamp} message {:upsert true})
     (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
     )
