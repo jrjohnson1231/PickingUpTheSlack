@@ -73,10 +73,10 @@
       <p style="font-size:24px;color:#4D394B;font-family:lato;display:inline;"><b>Search for a tag:</b></p>
       <input ng-keyup="$event.keyCode == 13 && searchEntered($event)" type="text" name="search" placeholder="Search..">
     </div>
-    <div style="width:70%;display:inline; margin-left:15px;">
+    <div style="width:70%; margin-left:15px;">
       <p style="font-size:24px;color:#4D394B;font-family:lato;display:inline;"><b>Tags in this channel:</b></p>
       <div>
-        <span ng-repeat="t in channelTagNames">{{t}}</span>
+        <span style="padding: 0px 5px" ng-repeat="t in channelTagNames">{{t}}</span>
       </div>
     </div>
   </body>
