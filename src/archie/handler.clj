@@ -46,7 +46,7 @@
         tags (get_tags message)
         message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags tags }]
     (println "inserting document" message)
-    (mc/update db "channels" {:name channel} {$setOnInsert {:name channel :tags '()}} { $push { :tags { $each ["1"] } } }  {:upsert true})
+    (mc/update db "channels" {:name channel} {$setOnInsert {:name channel}} {:upsert true})
     (mc/update db "messages" {:user user :timestamp timestamp} message {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
     (println "done inserting")
@@ -99,20 +99,25 @@
          (with-collection db "messages"
                (find {})
                ;; it is VERY IMPORTANT to use array maps with sort
-               (sort (array-map :timestamp -1))
-               (limit 10))
+               (sort (array-map :timestamp -1)))
          )
        )
  (GET "/messages/:channelID" [channelID]
       (let [uri     (System/getenv "MONGODB_URI")
             {:keys [conn db]} (mg/connect-via-uri uri)]
-        (mc/find-maps db "messages" {:channel channelID} )
+         (with-collection db "messages"
+               (find {:channel channelID})
+               ;; it is VERY IMPORTANT to use array maps with sort
+               (sort (array-map :timestamp -1)))
         )
       )
   (GET "/messages/:channelID/:tag" [channelID, tag]
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
-         (mc/find-maps db "messages" {:channel channelID :tags tag})
+         (with-collection db "messages"
+               (find {:channel channelID :tags tag})
+               ;; it is VERY IMPORTANT to use array maps with sort
+               (sort (array-map :timestamp -1)))
          )
        )
   (route/resources "/")
