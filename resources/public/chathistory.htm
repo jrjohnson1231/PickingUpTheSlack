@@ -25,7 +25,7 @@
     }
 
     input[type=text]:focus {
-        width: 100%;
+        width: 200px;
     }
 
     body {margin:0;}
@@ -126,6 +126,11 @@
 
   .message-text {
   }
+
+  .post {
+    margin-bottom: 10px;
+    border-bottom: 1px solid grey;
+  }
 </style>
 
 <body ng-app="myApp" ng-controller="myController">
@@ -135,12 +140,12 @@
   </div>
 
   <div class="tabcontent">
-    <div ng-repeat="msg in tabData">
+    <div ng-repeat="msg in tabData" class="post">
       <div class="user-text">
-        {{msg.user}}
+        {{msg.user}} {{toDate(msg.timestamp)}}
       </div>
       <div class="message-text">
-        {{msg.message}}
+        {{sliceTag(msg.message)}}
       </div>
     </div>
   </div>
@@ -172,6 +177,13 @@
           console.log(res.data);
         }
       )
+      }
+      $scope.sliceTag = function(tag) {
+        return tag.slice(1);
+      }
+      $scope.toDate = function(tStamp) {
+        var d = new Date(0);
+        return d.setUTCSeconds(tStamp);
       }
     });
   </script>
