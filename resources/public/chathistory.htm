@@ -25,7 +25,7 @@
     }
 
     input[type=text]:focus {
-        width: 100%;
+        width: 200px;
     }
 
     body {margin:0;}
@@ -69,12 +69,16 @@
       <center><h2 style="font-size:30px;font-family:lato;">Archie</h2><center>
     </div>
     <hr>
-
-    <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Search for a tag:</b></p>
-
-    <form>
-      <input type="text" name="search" placeholder="Search..">
-    </form>
+    <div style="width:30%;display:inline">
+      <p style="font-size:24px;color:#4D394B;font-family:lato;display:inline;"><b>Search for a tag:</b></p>
+      <input ng-keyup="$event.keyCode == 13 && searchEntered($event)" type="text" name="search" placeholder="Search..">
+    </div>
+    <div style="width:70%;">
+      <p style="font-size:24px;color:#4D394B;font-family:lato;display:inline;"><b>Tags in this channel:</b></p>
+      <div>
+        <span ng-repeat="t in channelTagNames">{{t}}</span>
+      </div>
+    </div>
   </body>
 
 <style>
@@ -86,7 +90,7 @@
     border: 1px solid #ccc;
     background-color: #3E313C;
     width: 30%;
-    height: 500px;
+    height: auto;
   }
 
   div.tab button {
@@ -114,32 +118,42 @@
   .tabcontent {
     float: left;
     padding: 0px 12px;
-    border: 1px solid #ccc;
     width: 70%;
     border-left: none;
-    height: 500px;
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  .user-text {
+    font-weight: bold;
+  }
+
+  .message-text {
+  }
+
+  .post {
+    margin-bottom: 10px;
+    border-bottom: 1px solid grey;
   }
 </style>
 
 <body ng-app="myApp" ng-controller="myController">
   <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Channels:</b></p>
-  <div class="tab">
-    <button ng-repeat="tab in tabs" class="tablinks" ng-click="getMessages(tab.name)" onclick="chathistory.core.openTab(event)">{{ tab.name }}</button>
-  </div>
+  <div>
+    <div class="tab">
+      <button ng-repeat="tab in tabs" class="tablinks" ng-click="getMessages(tab.name)" onclick="chathistory.core.openTab(event)">{{ tab.name }}</button>
+    </div>
 
-  <div class="tabcontent">
-    <h3>{{name}}</h3>
-    <p>Display of the LUG chat</p>
-  </div>
-
-  <div id="Systems" class="tabcontent">
-    <h3>Systems</h3>
-    <p>Display of the Systems Chat </p>
-  </div>
-
-  <div id="OS" class="tabcontent">
-    <h3>OS</h3>
-    <p>Display of the OS chat</p>
+    <div class="tabcontent">
+      <div ng-repeat="msg in tabData" class="post">
+        <div class="user-text">
+          {{msg.user}} {{toDate(msg.timestamp)}}
+        </div>
+        <div class="message-text">
+          {{sliceTag(msg.message)}}
+        </div>
+      </div>
+    </div>
   </div>
 
   <script type="text/javascript" charset="utf-8">
@@ -147,15 +161,49 @@
     app.controller('myController', function($scope, $http) {
       console.log('in controller');
       $scope.tabs = [];
+      $scope.channelTagNames = [];
+      $scope.tabData = '';
+      $scope.currentChannel = "";
       $http.get('/channels').then(function(res) {
         $scope.tabs = res.data
       })
 
       $scope.getMessages = function(channel) {
+        $scope.currentChannel = channel;
         console.log('getting messages')
         $http.get('/messages/' + channel).then(function(res) {
-          console.log(res.data)
+          console.log(res.data);
+          $scope.tabData = res.data;
         })
+        $http.get('/tags/' + channel).then(function(res) {
+          $scope.channelTagNames = res.data;
+        })
+      }
+
+      $scope.searchEntered = function(evt) {
+        var val = evt.target.value;
+        $http.get('/messages/' + $scope.currentChannel + '/' + val).then(function(res)
+        {
+          $scope.tabData = res.data;
+          console.log(res.data);
+        }
+      )
+      }
+      $scope.sliceTag = function(tag) {
+        return tag.replace(/\$/g, '');
+      }
+      $scope.toDate = function(tStamp) {
+        var date = new Date(tStamp*1000);
+
+        var hours = date.getHours();
+        var suffix = hours >= 12 ? " PM ":" AM ";
+        hours = ((hours+11)%12+1);
+
+        var minutes = "0" + date.getMinutes();
+
+        var seconds = "0" + date.getSeconds();
+
+        return (hours + ':' + minutes.substr(-2) + suffix);
       }
     });
   </script>
