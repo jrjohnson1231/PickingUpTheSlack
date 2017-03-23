@@ -119,6 +119,13 @@
     border-left: none;
     height: 500px;
   }
+
+  .user-text {
+    font-weight: bold;
+  }
+
+  .message-text {
+  }
 </style>
 
 <body ng-app="myApp" ng-controller="myController">
@@ -128,7 +135,14 @@
   </div>
 
   <div class="tabcontent">
-    <p>{{tabData}}</p>
+    <div ng-repeat="msg in tabData">
+      <div class="user-text">
+        {{msg.user}}
+      </div>
+      <div class="message-text">
+        {{msg.message}}
+      </div>
+    </div>
   </div>
 
   <script type="text/javascript" charset="utf-8">
