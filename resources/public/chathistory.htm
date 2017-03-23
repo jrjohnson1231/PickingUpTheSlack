@@ -173,7 +173,7 @@
         var at = new Date(a.timestamp * 1000);
         var bt = new Date(b.timestamp * 1000);
 
-        return at > bt;
+        return at < bt;
       }
 
       $scope.getMessages = function(channel) {
@@ -218,7 +218,7 @@
         var seconds = "0" + date.getSeconds();
 
         var today = new Date();
-        var diffDays = Math.abs((today.getTime() - date.getTime())/(24*60*60*1000));
+        var diffDays = Math.floor((today.getTime() - date.getTime())/(24*60*60*1000));
         var daysAgo = '';
         if(diffDays > 0) {
           daysAgo = '    ' + diffDays + ' days ago'
