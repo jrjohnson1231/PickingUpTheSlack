@@ -1,10 +1,10 @@
  (ns chathistory.core
-   (:require-macros [cljs.core.async.macros :refer [go]])
-   (:require [clojure.string :as str]
-             [cljs-http.client :as http]
-             [goog.dom :as dom]
-             [cognitect.transit :as t]
-             [cljs.core.async :refer [<!]]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [clojure.string :as str]
+            [cljs-http.client :as http]
+            [goog.dom :as dom]
+            [cognitect.transit :as t]
+            [cljs.core.async :refer [<!]]))
 ;
 ; (def r (t/reader :json))
 ;
