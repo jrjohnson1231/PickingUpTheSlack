@@ -86,8 +86,7 @@
              {:keys [conn db]} (mg/connect-via-uri uri)]
          (with-collection db "messages"
            (find {:channel channelID})
-           (fields [:tags])
-           (sort (array-map :timestamp -1)))
+           (fields [:tags]))
          )
        )
   (GET "/users" []
