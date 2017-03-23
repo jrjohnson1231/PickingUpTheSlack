@@ -81,14 +81,6 @@
          (mc/find-maps db "channels")
          )
        )
-  (GET "/channels/:channelID/tags" [channelID]
-       (let [uri     (System/getenv "MONGODB_URI")
-             {:keys [conn db]} (mg/connect-via-uri uri)]
-         (with-collection db "messages"
-           (find {:channel channelID})
-           (fields [:tags]))
-         )
-       )
   (GET "/users" []
       (let [uri     (System/getenv "MONGODB_URI")
             {:keys [conn db]} (mg/connect-via-uri uri)]
