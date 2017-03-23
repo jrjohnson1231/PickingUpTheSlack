@@ -173,7 +173,7 @@
         var at = new Date(a.timestamp * 1000);
         var bt = new Date(b.timestamp * 1000);
 
-        return at > bt;
+        return at < bt;
       }
 
       $scope.getMessages = function(channel) {
