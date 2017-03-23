@@ -90,7 +90,8 @@
     border: 1px solid #ccc;
     background-color: #3E313C;
     width: 30%;
-    height: auto;
+    height: 100%;
+    overflow-y: scroll;
   }
 
   div.tab button {
@@ -139,7 +140,7 @@
 
 <body ng-app="myApp" ng-controller="myController">
   <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Channels:</b></p>
-  <div>
+  <div style="height:100vh;">
     <div class="tab">
       <button ng-repeat="tab in tabs" class="tablinks" ng-click="getMessages(tab.name)" onclick="chathistory.core.openTab(event)">{{ tab.name }}</button>
     </div>
@@ -168,12 +169,17 @@
         $scope.tabs = res.data
       })
 
+      $scope.compareDate = function(a, b) {
+        return a.timestamp > b.timestamp;
+      }
+
       $scope.getMessages = function(channel) {
         $scope.currentChannel = channel;
         console.log('getting messages')
         $http.get('/messages/' + channel).then(function(res) {
           console.log(res.data);
           $scope.tabData = res.data;
+          $scope.tabData.sort(compareDate);
         })
         $http.get('/tags/' + channel).then(function(res) {
           $scope.channelTagNames = res.data;
@@ -185,6 +191,7 @@
         $http.get('/messages/' + $scope.currentChannel + '/' + val).then(function(res)
         {
           $scope.tabData = res.data;
+          $scope.tabData.sort(compareDate);
           console.log(res.data);
         }
       )
