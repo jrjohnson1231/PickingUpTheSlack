@@ -45,7 +45,7 @@
         tags (get_tags message)
         message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags tags }]
     (println "inserting document" message)
-    (mc/update db "channels" {:name channel} {$setOnInsert {:name channel :tags '()}} {$addToSet {:tags {$each tags}}} {:upsert true})
+    (mc/update db "channels" {:name channel} {$setOnInsert {:name channel :tags '()}}  {:upsert true})
     (mc/update db "messages" {:user user :timestamp timestamp} message {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
     (println "done inserting")
