@@ -185,12 +185,14 @@
         var date = new Date(tStamp*1000);
 
         var hours = date.getHours();
+        var suffix = hours >= 12 ? " PM ":" AM ";
+        hours = ((hours+11)%12+1);
 
         var minutes = "0" + date.getMinutes();
 
         var seconds = "0" + date.getSeconds();
 
-        return (hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2));
+        return (hours + ':' + minutes.substr(-2) + suffix);
       }
     });
   </script>
