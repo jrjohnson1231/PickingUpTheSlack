@@ -69,12 +69,16 @@
       <center><h2 style="font-size:30px;font-family:lato;">Archie</h2><center>
     </div>
     <hr>
-
-    <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Search for a tag:</b></p>
-
-    <form>
+    <div style="width:30%;display:inline">
+      <p style="font-size:24px;color:#4D394B;font-family:lato;display:inline;"><b>Search for a tag:</b></p>
       <input ng-keyup="$event.keyCode == 13 && searchEntered($event)" type="text" name="search" placeholder="Search..">
-    </form>
+    </div>
+    <div style="width:70%;">
+      <p style="font-size:24px;color:#4D394B;font-family:lato;display:inline;"><b>Tags in this channel:</b></p>
+      <div>
+        <span ng-repeat="t in channelTagNames">{{t}}</span>
+      </div>
+    </div>
   </body>
 
 <style>
@@ -86,7 +90,7 @@
     border: 1px solid #ccc;
     background-color: #3E313C;
     width: 30%;
-    height: 100%;
+    height: auto;
   }
 
   div.tab button {
@@ -114,10 +118,10 @@
   .tabcontent {
     float: left;
     padding: 0px 12px;
-    border: 1px solid #ccc;
     width: 70%;
     border-left: none;
     height: 100%;
+    overflow-y: scroll;
   }
 
   .user-text {
@@ -135,17 +139,19 @@
 
 <body ng-app="myApp" ng-controller="myController">
   <p style="font-size:24px;color:#4D394B;font-family:lato;"><b>Channels:</b></p>
-  <div class="tab">
-    <button ng-repeat="tab in tabs" class="tablinks" ng-click="getMessages(tab.name)" onclick="chathistory.core.openTab(event)">{{ tab.name }}</button>
-  </div>
+  <div>
+    <div class="tab">
+      <button ng-repeat="tab in tabs" class="tablinks" ng-click="getMessages(tab.name)" onclick="chathistory.core.openTab(event)">{{ tab.name }}</button>
+    </div>
 
-  <div class="tabcontent">
-    <div ng-repeat="msg in tabData" class="post">
-      <div class="user-text">
-        {{msg.user}} {{toDate(msg.timestamp)}}
-      </div>
-      <div class="message-text">
-        {{sliceTag(msg.message)}}
+    <div class="tabcontent">
+      <div ng-repeat="msg in tabData" class="post">
+        <div class="user-text">
+          {{msg.user}} {{toDate(msg.timestamp)}}
+        </div>
+        <div class="message-text">
+          {{sliceTag(msg.message)}}
+        </div>
       </div>
     </div>
   </div>
@@ -155,6 +161,7 @@
     app.controller('myController', function($scope, $http) {
       console.log('in controller');
       $scope.tabs = [];
+      $scope.channelTagNames = [];
       $scope.tabData = '';
       $scope.currentChannel = "";
       $http.get('/channels').then(function(res) {
@@ -167,6 +174,9 @@
         $http.get('/messages/' + channel).then(function(res) {
           console.log(res.data);
           $scope.tabData = res.data;
+        })
+        $http.get('/tags/' + channel).then(function(res) {
+          $scope.channelTagNames = res.data;
         })
       }
 
