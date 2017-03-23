@@ -99,20 +99,25 @@
          (with-collection db "messages"
                (find {})
                ;; it is VERY IMPORTANT to use array maps with sort
-               (sort (array-map :timestamp -1))
-               (limit 10))
+               (sort (array-map :timestamp -1)))
          )
        )
  (GET "/messages/:channelID" [channelID]
       (let [uri     (System/getenv "MONGODB_URI")
             {:keys [conn db]} (mg/connect-via-uri uri)]
-        (mc/find-maps db "messages" {:channel channelID} )
+         (with-collection db "messages"
+               (find {:channel channelID})
+               ;; it is VERY IMPORTANT to use array maps with sort
+               (sort (array-map :timestamp -1)))
         )
       )
   (GET "/messages/:channelID/:tag" [channelID, tag]
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
-         (mc/find-maps db "messages" {:channel channelID :tags tag})
+         (with-collection db "messages"
+               (find {:channel channelID :tags tag})
+               ;; it is VERY IMPORTANT to use array maps with sort
+               (sort (array-map :timestamp -1)))
          )
        )
   (route/resources "/")
