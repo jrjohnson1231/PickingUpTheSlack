@@ -86,7 +86,7 @@
     border: 1px solid #ccc;
     background-color: #3E313C;
     width: 30%;
-    height: 500px;
+    height: 100%;
   }
 
   div.tab button {
@@ -117,7 +117,7 @@
     border: 1px solid #ccc;
     width: 70%;
     border-left: none;
-    height: 500px;
+    height: 100%;
   }
 
   .user-text {
@@ -165,7 +165,8 @@
         $scope.currentChannel = channel;
         console.log('getting messages')
         $http.get('/messages/' + channel).then(function(res) {
-          console.log(res.data)
+          console.log(res.data);
+          $scope.tabData = res.data;
         })
       }
 
@@ -179,7 +180,7 @@
       )
       }
       $scope.sliceTag = function(tag) {
-        return tag.replace(/$/g, '');
+        return tag.replace(/\$/g, '');
       }
       $scope.toDate = function(tStamp) {
         var date = new Date(tStamp*1000);
