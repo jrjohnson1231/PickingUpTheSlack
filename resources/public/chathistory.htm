@@ -128,18 +128,7 @@
   </div>
 
   <div class="tabcontent">
-    <h3>{{name}}</h3>
-    <p>Display of the LUG chat</p>
-  </div>
-
-  <div id="Systems" class="tabcontent">
-    <h3>Systems</h3>
-    <p>Display of the Systems Chat </p>
-  </div>
-
-  <div id="OS" class="tabcontent">
-    <h3>OS</h3>
-    <p>Display of the OS chat</p>
+    <p>{{tabData}}</p>
   </div>
 
   <script type="text/javascript" charset="utf-8">
@@ -147,6 +136,7 @@
     app.controller('myController', function($scope, $http) {
       console.log('in controller');
       $scope.tabs = [];
+      $scope.tabData = '';
       $scope.currentChannel = "";
       $http.get('/channels').then(function(res) {
         $scope.tabs = res.data
@@ -164,6 +154,7 @@
         var val = evt.target.value;
         $http.get('/messages/' + $scope.currentChannel + '/' + val).then(function(res)
         {
+          $scope.tabData = res.data;
           console.log(res.data);
         }
       )
