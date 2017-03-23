@@ -19,6 +19,7 @@
                  [ring/ring-defaults "0.2.1"]]
   :plugins [[lein-ring "0.9.7"]
            [lein-cljsbuild "1.1.1"]]
+  :hooks [leiningen.cljsbuild]
   :cljsbuild {
               :builds [{:source-paths ["src"]
                         :compiler {:output-to "resources/public/js/main.js"
