@@ -183,6 +183,11 @@
           console.log(res.data);
           $scope.tabData = res.data;
           $scope.tabData.sort($scope.compareDate);
+          $scope.channelTagNames = [].concat.apply([], res.data.map(function(message) {
+            return message.tags;
+          })).filter(function(item, pos, a) {
+            return a.indexOf(item) == pos;
+          })
         })
         $http.get('/tags/' + channel).then(function(res) {
           $scope.channelTagNames = res.data;
