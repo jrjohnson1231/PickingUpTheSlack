@@ -3,3 +3,4 @@ target
 *.swp
 .lein*
 .token
+resources/public/js
