@@ -7,6 +7,7 @@
             [monger.core :as mg]
             [monger.collection :as mc]
             [compojure.route :as route]
+            [monger.operators :refer :all]
             monger.json)
   (:import [org.bson.types ObjectId]
            [com.mongodb MongoOptions ServerAddress]))
@@ -39,13 +40,15 @@
         channel (get_channel_info (get-in body [:event :channel]))
         user    (get_user_info (get-in body [:event :user]))
         message (get-in body [:event :text])
-        event_id (get-in body [:event :event_id])
+        event_id (get-in body [:event_id])
         timestamp (get-in body [:event :event_ts])
-        message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags (get_tags message) }]
+        tags (get_tags message)
+        message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags tags }]
     (println "inserting document" message)
     (mc/update db "messages" {:user user :timestamp timestamp} message {:upsert true})
-    (mc/update db "channels" {:name channel} {:name channel} {:upsert true})
+    (mc/update db "channels" {:name channel} {:name channel} {$addToSet {:tags {$each tags}}} {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
+    (println "done inserting")
     )
   )
 
