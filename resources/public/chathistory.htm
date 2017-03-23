@@ -58,8 +58,8 @@
 </head>
 
 <div class="topnav">
-  <a class="active" href="/Users/Jess/Documents/Classes/Hackers/frontend/chathistory.htm">Chat History</a>
-  <a href="/Users/Jess/Documents/Classes/Hackers/frontend/about.htm">About</a>
+  <a class="active" href="/chathistory.htm">Chat History</a>
+  <a href="/about.htm">About</a>
 </div>
 
 <hr>
@@ -170,7 +170,10 @@
       })
 
       $scope.compareDate = function(a, b) {
-        return a.timestamp > b.timestamp;
+        var at = new Date(a.timestamp * 1000);
+        var bt = new Date(b.timestamp * 1000);
+
+        return at > bt;
       }
 
       $scope.getMessages = function(channel) {
@@ -210,7 +213,14 @@
 
         var seconds = "0" + date.getSeconds();
 
-        return (hours + ':' + minutes.substr(-2) + suffix);
+        var today = new Date();
+        var diffDays = Math.abs((today.getTime() - date.getTime())/(24*60*60*1000));
+        var daysAgo = '';
+        if(diffDays > 0) {
+          daysAgo = '    ' + diffDays + ' days ago'
+        }
+
+        return (hours + ':' + minutes.substr(-2) + suffix + daysAgo);
       }
     });
   </script>
