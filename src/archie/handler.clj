@@ -46,7 +46,7 @@
         tags (get_tags message)
         message { :user user :channel channel :message message :timestamp timestamp :event_id event_id :tags tags }]
     (println "inserting document" message)
-    (mc/update db "channels" {:name channel} {$setOnInsert {:name channel :tags '()}} { $push { :tags { $each ["1"] } } }  {:upsert true})
+    (mc/update db "channels" {:name channel} {$setOnInsert {:name channel}} {:upsert true})
     (mc/update db "messages" {:user user :timestamp timestamp} message {:upsert true})
     (mc/update db "users" {:name user} {:name user} {:upsert true})
     (println "done inserting")
@@ -79,6 +79,15 @@
        (let [uri     (System/getenv "MONGODB_URI")
              {:keys [conn db]} (mg/connect-via-uri uri)]
          (mc/find-maps db "channels")
+         )
+       )
+  (GET "/channels/:channelID/tags" [channelID]
+       (let [uri     (System/getenv "MONGODB_URI")
+             {:keys [conn db]} (mg/connect-via-uri uri)]
+         (with-collection db "messages"
+           (find {:channel channelID})
+           (fields [:tags])
+           (sort (array-map :timestamp -1)))
          )
        )
   (GET "/users" []
