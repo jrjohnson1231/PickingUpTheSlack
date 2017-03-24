@@ -20,7 +20,7 @@ To start a web server for the application, run:
     lein ring server $PORT # opens browser
     lein ring server-headless $PORT # doesn't open browser
     
-Then neavigate to localhost:PORT/chathistory.htm. Depending on your browser, the messages may not be sorted properly. We have found that Firefox always works however.
+Then neavigate to http://localhost:PORT/chathistory.htm. Depending on your browser, the messages may not be sorted properly. We have found that Firefox always works however.
 
 ## License
 
